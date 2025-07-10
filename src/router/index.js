@@ -4,123 +4,102 @@ import { createRouter, createWebHistory } from 'vue-router';
 const router = createRouter({
     history: createWebHistory(),
     routes: [
+        // Inicio
+        {
+            path: '/',
+            redirect: '/login'
+        },
+        //login
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('@/views/pages/auth/Login.vue')
+        },
+        //rutas protegidas
         {
             path: '/',
             component: AppLayout,
             children: [
                 {
-                    path: '/',
+                    path: '/dashboard',
                     name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
+                    component: () => import('@/views/Dashboard.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/formlayout',
-                    name: 'formlayout',
-                    component: () => import('@/views/uikit/FormLayout.vue')
+                    path: '/usuario',
+                    name: 'usuario',
+                    component: () => import('@/views/pages/user/gestionUsuario.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/input',
-                    name: 'input',
-                    component: () => import('@/views/uikit/InputDoc.vue')
+                    path: '/asistencia',
+                    name: 'asistencia',
+                    component: () => import('@/views/pages/user/gestionAsitencia.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/button',
-                    name: 'button',
-                    component: () => import('@/views/uikit/ButtonDoc.vue')
+                    path: '/suceso',
+                    name: 'suceso',
+                    component: () => import('@/views/pages/sucesos/gestionSucesos.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/table',
-                    name: 'table',
-                    component: () => import('@/views/uikit/TableDoc.vue')
+                    path: '/diagnostico',
+                    name: 'diagnostico',
+                    component: () => import('@/views/pages/diagnostico/gestionDiagnostico.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/list',
-                    name: 'list',
-                    component: () => import('@/views/uikit/ListDoc.vue')
+                    path: '/atenAlumno',
+                    name: 'atenAlumno',
+                    component: () => import('@/views/pages/atencionAlumnos/gestionAtenAlumnos.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/tree',
-                    name: 'tree',
-                    component: () => import('@/views/uikit/TreeDoc.vue')
+                    path: '/atenApoderado',
+                    name: 'atenApoderado',
+                    component: () => import('@/views/pages/atencionApoderado/gestionAtenApoderado.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/panel',
-                    name: 'panel',
-                    component: () => import('@/views/uikit/PanelsDoc.vue')
+                    path: '/tareas',
+                    name: 'tareas',
+                    component: () => import('@/views/pages/asignar/gestionTareas.vue'),
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: '/tareasPracticante',
+                    name: 'tareasPracticante',
+                    component: () => import('@/views/pages/asignar/gestionTareasPracticante.vue'),
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: '/alumnos',
+                    name: 'alumnos',
+                    component: () => import('@/views/pages/alumnos/gestionAlumnos.vue'),
+                    meta: { requiresAuth: true }
                 },
 
                 {
-                    path: '/uikit/overlay',
-                    name: 'overlay',
-                    component: () => import('@/views/uikit/OverlayDoc.vue')
+                    path: '/cita',
+                    name: 'cita',
+                    component: () => import('@/views/pages/citas/agendarCita.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
-                    path: '/uikit/media',
-                    name: 'media',
-                    component: () => import('@/views/uikit/MediaDoc.vue')
-                },
-                {
-                    path: '/uikit/message',
-                    name: 'message',
-                    component: () => import('@/views/uikit/MessagesDoc.vue')
-                },
-                {
-                    path: '/uikit/file',
-                    name: 'file',
-                    component: () => import('@/views/uikit/FileDoc.vue')
-                },
-                {
-                    path: '/uikit/menu',
-                    name: 'menu',
-                    component: () => import('@/views/uikit/MenuDoc.vue')
-                },
-                {
-                    path: '/uikit/charts',
-                    name: 'charts',
-                    component: () => import('@/views/uikit/ChartDoc.vue')
-                },
-                {
-                    path: '/uikit/misc',
-                    name: 'misc',
-                    component: () => import('@/views/uikit/MiscDoc.vue')
-                },
-                {
-                    path: '/uikit/timeline',
-                    name: 'timeline',
-                    component: () => import('@/views/uikit/TimelineDoc.vue')
-                },
-                {
-                    path: '/pages/empty',
-                    name: 'empty',
-                    component: () => import('@/views/pages/Empty.vue')
-                },
-                {
-                    path: '/pages/crud',
-                    name: 'crud',
-                    component: () => import('@/views/pages/Crud.vue')
-                },
-                {
-                    path: '/documentation',
-                    name: 'documentation',
-                    component: () => import('@/views/pages/Documentation.vue')
+                    path: '/citaPsicologo',
+                    name: 'citaPsicologo',
+                    component: () => import('@/views/pages/citas/gestionCita.vue'),
+                    meta: { requiresAuth: true }
                 }
             ]
         },
-        {
-            path: '/landing',
-            name: 'landing',
-            component: () => import('@/views/pages/Landing.vue')
-        },
+        // Rutas de pantalla de accesos denegados
         {
             path: '/pages/notfound',
             name: 'notfound',
-            component: () => import('@/views/pages/NotFound.vue')
-        },
-
-        {
-            path: '/auth/login',
-            name: 'login',
-            component: () => import('@/views/pages/auth/Login.vue')
+            component: () => import('@/views/pages/auth/NotFound.vue')
         },
         {
             path: '/auth/access',
@@ -129,10 +108,25 @@ const router = createRouter({
         },
         {
             path: '/auth/error',
-            name: 'error',
+            name: 'ErrorServidor',
             component: () => import('@/views/pages/auth/Error.vue')
+        },
+        // Rutas de paginas no dirigidas
+        {
+            path: '/:pathMatch(.*)*',
+            redirect: '/pages/notfound'
         }
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token');
+
+    if (to.meta.requiresAuth && !token) {
+        return next('/auth/access');
+    }
+
+    next();
 });
 
 export default router;
