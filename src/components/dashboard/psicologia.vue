@@ -23,9 +23,9 @@ function formatearTitulo(tipo) {
 }
 
 const getColor = (cantidad) => {
-    if (cantidad >= 8) return 'bg-red-500';
-    if (cantidad >= 5) return 'bg-orange-500';
-    if (cantidad >= 3) return 'bg-yellow-500';
+    if (cantidad >= 30) return 'bg-red-500';
+    if (cantidad >= 20) return 'bg-orange-500';
+    if (cantidad >= 10) return 'bg-yellow-500';
     return 'bg-green-500';
 };
 

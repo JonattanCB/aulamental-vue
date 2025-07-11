@@ -1,6 +1,7 @@
 <script setup>
 import { useSucesosAlumno } from '@/composables/useSuceso/useSucesosAlumno';
 import { useSucesosStats } from '@/composables/useSuceso/useSucesosStats';
+import { descargarPdfSuceso, descargarPdfSucesos } from '@/service/ExportarService';
 import { getDetalleSuceso } from '@/service/SucesoService';
 import { computed, ref, toRef, watch } from 'vue';
 
@@ -34,6 +35,14 @@ watch(
         }
     }
 );
+
+async function descargarPDF() {
+    await descargarPdfSucesos(props.idUsuario);
+}
+
+function descargarSucesoPDF(idSuceso) {
+    descargarPdfSuceso(idSuceso, props.idUsuario);
+}
 
 async function abrirDetalleSuceso(id) {
     try {
@@ -133,7 +142,7 @@ function cerrarDialogo() {
             <Toolbar class="mb-1">
                 <template #end>
                     <Button label="Cita" v-if="!esDirectora" icon="bi bi-whatsapp" severity="success" style="width: 9rem" class="mr-3" />
-                    <Button label="Exportar" icon="pi pi-upload" outlined severity="help" />
+                    <Button label="Exportar" v-if="totalRecords != 0" icon="pi pi-upload" outlined severity="help" @click="descargarPDF" />
                 </template>
             </Toolbar>
         </div>
@@ -189,7 +198,7 @@ function cerrarDialogo() {
                     <template #body="slotProps">
                         <div class="flex items-center gap-2">
                             <Button icon="bi bi-file-earmark-text-fill" style="font-size: 1.3rem" text severity="info" @click="abrirDetalleSuceso(slotProps.data.id)" />
-                            <Button icon="bi bi-filetype-pdf" style="font-size: 1.3rem" text severity="help" />
+                            <Button icon="bi bi-filetype-pdf" style="font-size: 1.3rem" text severity="help" @click="descargarSucesoPDF(slotProps.data.id)" />
                         </div>
                     </template>
                 </Column>

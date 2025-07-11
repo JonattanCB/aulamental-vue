@@ -1,4 +1,5 @@
 <script setup>
+import ExportarAtenAlumnoAsistenciaDialog from '@/components/atencionAlumnos/ExportarAtenAlumnoAsistenciaDialog.vue';
 import RegistrarAtenAlumnoDialog from '@/components/atencionAlumnos/RegistrarAtenAlumnoDialog.vue';
 import VisualizarAtenAlumnoDialog from '@/components/atencionAlumnos/VisualizarAtenAlumnoDialog.vue';
 import { useAtencionAlumnos } from '@/composables/useAtenAlumno/useAtencionAlumnos';
@@ -11,9 +12,14 @@ const nombreSelec = ref(null);
 const totalSelec = ref(null);
 const anosSelec = ref(null);
 const gradosSelec = ref(null);
+const showExportDialog = ref(null);
 
 function openNew() {
     showRegistroDialog.value = true;
+}
+
+function openExport() {
+    showExportDialog.value = true;
 }
 
 function openView(id, nombre, total, anos, grado) {
@@ -39,7 +45,8 @@ function recargarAtencion() {
         <div class="card">
             <Toolbar class="mb-1">
                 <template #start>
-                    <Button label="Nueva Atencion" icon="pi pi-plus" severity="success" style="width: 12rem" class="mr-3" @click="openNew" />
+                    <Button label="Nueva Atencion" icon="pi pi-plus" severity="success" class="mr-3" @click="openNew" />
+                    <Button label="Asistencia" icon="pi pi-download" outlined severity="help" @click="openExport" />
                 </template>
             </Toolbar>
         </div>
@@ -137,6 +144,7 @@ function recargarAtencion() {
                 </Column>
             </DataTable>
         </div>
+        <ExportarAtenAlumnoAsistenciaDialog v-model:visible="showExportDialog" />
         <RegistrarAtenAlumnoDialog v-model:visible="showRegistroDialog" @save="recargarAtencion" />
         <VisualizarAtenAlumnoDialog v-model:visible="showViewDialog" :idUsuario="alumnoid" :nombre="nombreSelec" :total="totalSelec" :anos="anosSelec" :grado="gradosSelec" />
     </div>

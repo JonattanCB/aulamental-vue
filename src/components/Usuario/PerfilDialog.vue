@@ -33,6 +33,8 @@ watch(localVisible, (val) => {
     emit('update:visible', val);
 });
 
+const roles = JSON.parse(localStorage.getItem('roles') || '[]');
+
 function close() {
     localVisible.value = false;
     resetForm();
@@ -80,19 +82,20 @@ async function cambiarContrasena() {
             </div>
         </template>
         <!-- Perfil -->
-
-        <div class="flex items-center gap-4 mb-4">
-            <div class="bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold" style="width: 50px; height: 50px">{{ alias }}</div>
-            <div class="flex flex-col justify-center leading-tight">
-                <p class="font-semibold m-0">{{ nombre }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 m-0">{{ correo }}</p>
+        <div class="card-border">
+            <div class="flex items-center gap-4 mb-1">
+                <div class="bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold" style="width: 50px; height: 50px">{{ alias }}</div>
+                <div class="flex flex-col justify-center leading-tight">
+                    <p class="font-semibold m-0">{{ nombre }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 m-0">{{ correo }}</p>
+                </div>
             </div>
         </div>
 
-        <hr class="my-4 border-gray-300 dark:border-gray-700" />
+        <hr v-if="roles.includes('Psicologia')" class="my-4 border-gray-300 dark:border-gray-700" />
 
         <!-- Contacto WhatsApp -->
-        <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-md p-4 text-center mb-6">
+        <div v-if="roles.includes('Psicologia')" class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-md p-4 text-center mb-6">
             <p class="text-green-800 dark:text-green-300 font-medium mb-2">Contacto WhatsApp</p>
             <div class="bg-black w-32 h-32 mx-auto rounded"></div>
             <p class="text-xs text-green-800 dark:text-green-300 mt-2">Escanea para contactarme por WhatsApp</p>
@@ -101,21 +104,23 @@ async function cambiarContrasena() {
         <hr class="my-4 border-gray-300 dark:border-gray-700" />
 
         <!-- Cambiar Contraseña -->
-        <h3 class="text-sm mb-3" style="font-size: 1rem">Cambiar Contraseña</h3>
-        <div class="space-y-3 mb-4">
-            <div class="relative">
-                <label for="contrasenaActual" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Contraseña Actual</label>
-                <Password id="password1" v-model="contrasenaActual" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+        <div class="card-border">
+            <h3 class="text-sm mb-3" style="font-size: 1rem">Cambiar Contraseña</h3>
+            <div class="space-y-3 mb-4">
+                <div class="relative">
+                    <label for="contrasenaActual" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Contraseña Actual</label>
+                    <Password id="password1" v-model="contrasenaActual" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                </div>
+                <div class="relative">
+                    <label for="nuevaContrasena" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nueva Contraseña</label>
+                    <Password id="password2" v-model="nuevaContrasena" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                </div>
+                <div class="relative">
+                    <label for="confirmarContrasena" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmar Nueva Contraseña</label>
+                    <Password id="password3" v-model="confirmarContrasena" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                </div>
             </div>
-            <div class="relative">
-                <label for="nuevaContrasena" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nueva Contraseña</label>
-                <Password id="password2" v-model="nuevaContrasena" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
-            </div>
-            <div class="relative">
-                <label for="confirmarContrasena" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirmar Nueva Contraseña</label>
-                <Password id="password3" v-model="confirmarContrasena" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
-            </div>
+            <Button label="Guardar Cambios" class="w-full" @click="cambiarContrasena"></Button>
         </div>
-        <Button label="Guardar Cambios" class="w-full" @click="cambiarContrasena"></Button>
     </Dialog>
 </template>

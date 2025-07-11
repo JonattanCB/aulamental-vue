@@ -1,6 +1,14 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import RecuperarContraseña from '@/components/Usuario/RecuperarContraseña.vue';
 import { useLogin } from '@/composables/useLogin.js';
+import { ref } from 'vue';
+
+const showrecuperar = ref(false);
+
+function openRecuperar() {
+    showrecuperar.value = true;
+}
 
 localStorage.removeItem('token');
 localStorage.removeItem('id');
@@ -34,6 +42,9 @@ const { correo, contrasenia, handleLogin } = useLogin();
                         <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Contraseña</label>
                         <Password id="password1" v-model="contrasenia" placeholder="Contraseña" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
 
+                        <div class="flex justify-end mt-1">
+                            <span class="font-medium no-underline cursor-pointer text-primary text-sm" @click="openRecuperar">¿Olvidaste tu contraseña?</span>
+                        </div>
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8" />
                         <Button label="Iniciar Sesión" class="w-full" @click="handleLogin"></Button>
                     </div>
@@ -41,6 +52,7 @@ const { correo, contrasenia, handleLogin } = useLogin();
             </div>
         </div>
     </div>
+    <RecuperarContraseña v-model:visible="showrecuperar" />
 </template>
 
 <style scoped>

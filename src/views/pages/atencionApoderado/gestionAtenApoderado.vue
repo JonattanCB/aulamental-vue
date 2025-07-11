@@ -1,4 +1,5 @@
 <script setup>
+import ExportarAtenApoderadoAsistenciaDialog from '@/components/atencionApoderado/ExportarAtenApoderadoAsistenciaDialog.vue';
 import RegistrarAtenApoderadoDialog from '@/components/atencionApoderado/RegistrarAtenApoderadoDialog.vue';
 import VisualizarAtenApoderadoDialog from '@/components/atencionApoderado/VisualizarAtenApoderadoDialog.vue';
 import { useAtencionApoderados } from '@/composables/useAtenApoderado/useListaAtencionApoderado';
@@ -7,6 +8,7 @@ import { ref } from 'vue';
 
 const showRegistroDialog = ref(false);
 const showViewDialog = ref(false);
+const showExportarDialog = ref(false);
 const apoderadoid = ref(null);
 const nombreSelect = ref(null);
 const fechaSelect = ref(null);
@@ -15,6 +17,10 @@ const totalSelec = ref(null);
 
 function openNew() {
     showRegistroDialog.value = true;
+}
+
+function openExport() {
+    showExportarDialog.value = true;
 }
 
 function openView(id, nombre, fecha, telefono, total) {
@@ -40,7 +46,8 @@ function recargarAtencion() {
         <div class="card">
             <Toolbar class="mb-1">
                 <template #start>
-                    <Button label="Nueva Atencion" icon="pi pi-plus" severity="success" style="width: 12rem" class="mr-3" @click="openNew" />
+                    <Button label="Nueva Atencion" icon="pi pi-plus" severity="success" class="mr-3" @click="openNew" />
+                    <Button label="Asistencia" icon="pi pi-download" outlined severity="help" @click="openExport" />
                 </template>
             </Toolbar>
         </div>
@@ -126,6 +133,7 @@ function recargarAtencion() {
                 </Column>
             </DataTable>
         </div>
+        <ExportarAtenApoderadoAsistenciaDialog v-model:visible="showExportarDialog" />
         <RegistrarAtenApoderadoDialog v-model:visible="showRegistroDialog" @save="recargarAtencion" />
         <VisualizarAtenApoderadoDialog v-model:visible="showViewDialog" :idUsuario="apoderadoid" :nombre="nombreSelect" :fecha="fechaSelect" :telefono="telefonoSelect" :total="totalSelec" />
     </div>

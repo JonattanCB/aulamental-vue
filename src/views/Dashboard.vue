@@ -90,10 +90,10 @@ onMounted(async () => {
 
 <template>
     <div class="mb-4">
-        <h2 class="font-bold text-slate-700 dark:text-white">
+        <h2 v-if="rolSeleccionado !== 'default'" class="font-bold text-slate-700 dark:text-white">
             Panel de Control <template v-if="rolSeleccionado !== 'default'"> - {{ nameRol }}</template>
         </h2>
-        <span class="text-gray-500 dark:text-gray-200 font-bold">Panel Informativo – {{ fechaFormateada }}</span>
+        <span v-if="rolSeleccionado !== 'default'" class="text-gray-500 dark:text-gray-200 font-bold">Panel Informativo – {{ fechaFormateada }}</span>
         <div v-if="rolSeleccionado !== 'default'" style="margin-top: 1rem">
             <span class="text-gray-500 dark:text-gray-200 font-bold">Roles: </span>
             <span v-for="(rol, index) in roles" :key="index" class="estado-badge me-2" :class="rol">
