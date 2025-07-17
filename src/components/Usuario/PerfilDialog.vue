@@ -92,15 +92,6 @@ async function cambiarContrasena() {
             </div>
         </div>
 
-        <hr v-if="roles.includes('Psicologia')" class="my-4 border-gray-300 dark:border-gray-700" />
-
-        <!-- Contacto WhatsApp -->
-        <div v-if="roles.includes('Psicologia')" class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-md p-4 text-center mb-6">
-            <p class="text-green-800 dark:text-green-300 font-medium mb-2">Contacto WhatsApp</p>
-            <div class="bg-black w-32 h-32 mx-auto rounded"></div>
-            <p class="text-xs text-green-800 dark:text-green-300 mt-2">Escanea para contactarme por WhatsApp</p>
-        </div>
-
         <hr class="my-4 border-gray-300 dark:border-gray-700" />
 
         <!-- Cambiar Contraseña -->

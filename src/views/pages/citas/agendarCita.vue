@@ -13,7 +13,7 @@ const hora = ref(null);
 const motivo = ref('');
 const toast = useToast();
 
-const idAlumno = 1;
+const idAlumno = localStorage.getItem('id');
 
 const { dt, data: citas, totalRecords, lazyParams, search, onPage, onSearch, exportCSV, lazyLoad } = usegetCitasAlumno(idAlumno);
 

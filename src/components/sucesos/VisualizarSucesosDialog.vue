@@ -1,4 +1,5 @@
 <script setup>
+import { useMensajeria } from '@/composables/useCita/useMensajeria';
 import { useSucesosAlumno } from '@/composables/useSuceso/useSucesosAlumno';
 import { useSucesosStats } from '@/composables/useSuceso/useSucesosStats';
 import { descargarPdfSuceso, descargarPdfSucesos } from '@/service/ExportarService';
@@ -18,6 +19,29 @@ const detalleIncidente = ref('');
 const argumentoAlumno = ref('');
 const accionesTomadas = ref('');
 const fecha = ref('');
+const openViewCitacion = ref(false);
+
+const today = new Date();
+const fechaCita = ref(null);
+const hora = ref(null);
+const motivo = ref('');
+const idAlumno = toRef(props, 'idUsuario');
+const idpsicologo = localStorage.getItem('id');
+const psicologo = localStorage.getItem('nombre');
+
+function formatTime(date) {
+    if (!date) return null;
+    const d = new Date(date);
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
+
+function formatDate(date) {
+    if (!date) return null;
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
+}
 
 const { dt, data: sucesos, totalRecords, lazyParams, search, onPage, onSearch, exportCSV, lazyLoad } = useSucesosAlumno(idUsuarioRef);
 
@@ -60,6 +84,30 @@ async function abrirDetalleSuceso(id) {
     } catch (error) {
         console.error('Error al cargar detalle del suceso:', error);
     }
+}
+
+const { enviarMensajeCitacion, loading } = useMensajeria();
+
+function enviar() {
+    const payload = {
+        idAlumno: idAlumno.value,
+        idpsicologo: Number(idpsicologo),
+        psicologo: psicologo,
+        fecha: formatDate(fechaCita.value),
+        hora: formatTime(hora.value),
+        motivo: motivo.value
+    };
+
+    enviarMensajeCitacion(payload, () => {
+        openViewCitacion.value = false;
+    });
+}
+
+function openCitacion() {
+    fechaCita.value = new Date();
+    hora.value = null;
+    motivo.value = '';
+    openViewCitacion.value = true;
 }
 
 function cerrarDialogo() {
@@ -141,7 +189,7 @@ function cerrarDialogo() {
         <div class="card-border" style="margin-top: 1rem">
             <Toolbar class="mb-1">
                 <template #end>
-                    <Button label="Cita" v-if="!esDirectora" icon="bi bi-whatsapp" severity="success" style="width: 9rem" class="mr-3" />
+                    <Button label="Cita" v-if="!esDirectora" icon="bi bi-whatsapp" severity="success" style="width: 9rem" class="mr-3" @click="openCitacion" />
                     <Button label="Exportar" v-if="totalRecords != 0" icon="pi pi-upload" outlined severity="help" @click="descargarPDF" />
                 </template>
             </Toolbar>
@@ -208,6 +256,36 @@ function cerrarDialogo() {
             <Button label="Cerrar" outlined @click="cerrarDialogo" />
         </template>
     </Dialog>
+    <!-- Citacion a su padre de familia-->
+    <Dialog v-model:visible="openViewCitacion" modal :style="{ width: '40rem' }">
+        <template #header>
+            <div class="flex align-items-center justify-content-center" style="display: flex; align-items: center">
+                <i class="bi bi-envelope-arrow-up-fill text-blue-600 dark:text-blue-700" style="font-size: 1.2rem"></i>
+                <span class="font-semibold text-blue-600 dark:text-blue-700" style="font-size: 1.1rem; margin-left: 0.5rem">Mensaje de Citacion</span>
+            </div>
+        </template>
+        <!-- Fecha y Hora -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" style="margin-top: 1rem">
+            <div>
+                <label class="text-gray-500 dark:text-gray-400 mb-1 block">Fecha </label>
+                <DatePicker v-model="fechaCita" :minDate="today" dateFormat="yy-mm-dd" showIcon inputClass="w-full" class="w-full" />
+            </div>
+            <div>
+                <label class="text-gray-500 dark:text-gray-400 mb-1 block">Hora</label>
+                <Calendar v-model="hora" timeOnly hourFormat="24" class="w-full" inputClass="w-full " :showIcon="true" />
+            </div>
+        </div>
+        <!-- Motivo -->
+        <div style="margin-top: 1rem">
+            <label class="text-gray-500 dark:text-gray-400 mb-1 block">Motivo de la Consulta</label>
+            <Textarea v-model="motivo" placeholder="Describe el motivo de la consulta aquí.." :autoResize="true" rows="5" cols="30" style="width: 100%" />
+        </div>
+        <template #footer>
+            <Button label="Cerrar" @click="openViewCitacion = false" />
+            <Button label="Enviar" :loading="loading" class="p-button-success" @click="enviar" />
+        </template>
+    </Dialog>
+
     <!-- Dialog de detalle del suceso-->
     <Dialog v-model:visible="mostrarDetalle" modal :style="{ width: '40rem' }">
         <template #header>
