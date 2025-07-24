@@ -1,8 +1,12 @@
 <script setup>
+import EditarAlumnoDialog from '@/components/alumno/EditarAlumnoDialog.vue';
+import RegistrarAlumnoDialog from '@/components/alumno/RegistrarAlumnoDialog.vue';
 import VisualizarAlumnoDialog from '@/components/alumno/VisualizarAlumnoDialog.vue';
 import { useAlumnos } from '@/composables/useAlumno/useAlumnoPage';
 import { ref } from 'vue';
 const showViewDialog = ref(null);
+const showAddDialog = ref(false);
+const showEditDialog = ref(false);
 const idAlumnoSelec = ref(null);
 
 function openView(id) {
@@ -10,13 +14,34 @@ function openView(id) {
     showViewDialog.value = true;
 }
 
+function openNew() {
+    showAddDialog.value = true;
+}
+
+function openEdit(id) {
+    idAlumnoSelec.value = id;
+    showEditDialog.value = true;
+}
+
 const { dt, data: alumnos, totalRecords, lazyParams, search, onPage, onSearch, exportCSV, lazyLoad } = useAlumnos();
+
+function recargarUsuarios() {
+    lazyLoad();
+}
 </script>
 
 <template>
     <div>
         <h2>Gestión de Estudiantes</h2>
         <p class="subtitle">Administra el registro de estudiantes del sistema</p>
+        <div class="card">
+            <Toolbar class="mb-0">
+                <template #start>
+                    <Button label="Nuevo" icon="pi pi-plus" severity="success" class="mr-3" @click="openNew" />
+                    <Button label="Exportar" icon="pi pi-download" outlined severity="help" @click="exportCSV($event)" />
+                </template>
+            </Toolbar>
+        </div>
         <div class="card">
             <DataTable
                 :value="alumnos"
@@ -77,15 +102,18 @@ const { dt, data: alumnos, totalRecords, lazyParams, search, onPage, onSearch, e
                     </template>
                 </Column>
                 <Column field="direccion" header="Dirección" style="max-width: 12rem" />
-                <Column header="Acciones" style="max-width: 2rem">
+                <Column header="Acciones" style="max-width: 3rem">
                     <template #body="slotProps">
                         <div class="flex items-center">
                             <Button icon="bi bi-info-circle" class="p-button-text" @click="openView(slotProps.data.id)" />
+                            <Button icon="bi bi-pencil-square" text severity="warn" @click="openEdit(slotProps.data.id)" />
                         </div>
                     </template>
                 </Column>
             </DataTable>
         </div>
-        <VisualizarAlumnoDialog v-model:visible="showViewDialog" :idUsuario="idAlumnoSelec" />
+        <VisualizarAlumnoDialog v-model:visible="showViewDialog" :idUsuario="idAlumnoSelec" @save="recargarUsuarios" />
+        <RegistrarAlumnoDialog v-model:visible="showAddDialog" @save="recargarUsuarios" />
+        <EditarAlumnoDialog v-model:visible="showEditDialog" :idUsuario="idAlumnoSelec" @save="recargarUsuarios" />
     </div>
 </template>

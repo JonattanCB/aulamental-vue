@@ -80,13 +80,6 @@ const router = createRouter({
                     component: () => import('@/views/pages/alumnos/gestionAlumnos.vue'),
                     meta: { requiresAuth: true }
                 },
-
-                {
-                    path: '/cita',
-                    name: 'cita',
-                    component: () => import('@/views/pages/citas/agendarCita.vue'),
-                    meta: { requiresAuth: true }
-                },
                 {
                     path: '/citaPsicologo',
                     name: 'citaPsicologo',
